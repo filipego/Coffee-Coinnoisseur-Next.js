@@ -7,9 +7,26 @@ import coffeeStoresData from "../data/coffee-stores.json"
 
 export async function getStaticProps(context) {
   console.log("Hi getStaticProps");
+
+
+  const response = await fetch('https://api.foursquare.com/v3/places/nearby?ll=43.65267326999575,-79.39545615725015&query=coffee stores&v=20220105', {
+    "headers": {
+      'Authorization': process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY
+    }
+  })
+  const data = await response.json();
+   
+  const transformedData = data?.results?.map((venue) => {
+      return {
+          id: venue.fsq_id,
+          ...venue
+      }}) || [];
+
+
+
   return {
     props: {
-      coffeeStores: coffeeStoresData,
+      coffeeStores: transformedData,
     }, 
   }
 }
@@ -51,7 +68,7 @@ export default function Home({coffeeStores}) {
               <Card 
                 key={id}
                 name={name} 
-                imgUrl={imgUrl} 
+                imgUrl={imgUrl || 'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'} 
                 href={`/coffee-store/${id}`} 
               />
             )
@@ -63,3 +80,5 @@ export default function Home({coffeeStores}) {
     </div>
   )
 }
+
+
