@@ -3,7 +3,7 @@ import Image from "next/image"
 import styles from "../styles/Home.module.scss"
 import Banner from "../components/banner"
 import Card from "../components/card"
-import coffeeStoresData from "../data/coffee-stores.json"
+
 
 export async function getStaticProps(context) {
   console.log("Hi getStaticProps");
